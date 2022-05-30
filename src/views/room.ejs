@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rocket.q - Questions</title>
+
+    <!-- STYLES -->
+    <link rel="stylesheet" href="/styles/global.css" />
+    <link rel="stylesheet" href="/styles/room.css" />
+    <link rel="stylesheet" href="/styles/modal.css">
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- SCRIPTS -->
+    <script src="/scripts/main.js" defer type="module"></script>
+  </head>
+  <body>
+    <div id="room" class="content">
+      <header>
+        <a href="/">
+          <img src="/images/logo.svg" alt="rocket.q logo" />
+        </a>
+
+        <div class="buttons">
+          <div class="button outlined" id="room-id" data-id="<%= roomId %>">
+            #<%= roomId %>
+            <img src="/images/copy.svg" alt="copy room number" />
+          </div>
+          <a href="/create-pass" class="button">
+            <img src="/images/users-white.svg" alt="create room" />
+            Create Room
+          </a>
+        </div>
+      </header>
+
+      <main>
+        <section id="question-form">
+          <h2>Ask your question</h2>
+          <form action="/question/create/<%= roomId %>" method="POST">
+            <label class="sr-only" for="question"
+              >What do you want to ask?</label
+            >
+            <textarea
+              name="question"
+              id="question"
+              placeholder="What do you want to ask?"
+            ></textarea>
+
+            <footer>
+              <div>
+                <img src="/images/lock.svg" alt="lock icon" />
+                This question is anonymous
+              </div>
+              <button>Submit</button>
+            </footer>
+          </form>
+        </section>
+
+        <section id="questions">
+          <h2 class="sr-only">Community questions</h2>
+          <div class="questions">
+
+            <% if (isNoQuestions) { %>
+              <%- include('partials/no-question') %>
+            <% } %>
+
+            <% questions.forEach(question => { %>
+              <div class="question-wrapper">
+                <div class="question-content">
+                  <div class="user">
+                    <img src="/images/solo-user.svg" alt="avatar icon" />
+                  </div>
+                  <div class="question">
+                      <p><%= question.title  %></p>
+                  </div>
+                </div>
+  
+                <div class="actions">
+                  <a href="#" class="check" data-id="<%= question.id %>">
+                      <img src="/images/check.svg" alt="check">
+                      Mark as read
+                  </a>
+                  <a href="#" class="delete" data-id="<%= question.id %>">
+                      <img src="/images/trash.svg" alt="delete">
+                      Delete
+                  </a>
+                </div>
+              </div>
+            <% }); %>
+
+              <% questionsRead.forEach(questionRead => { %>
+                <div class="question-wrapper read">
+                  <div class="question-content">
+                    <div class="user">
+                      <img src="/images/solo-user.svg" alt="avatar icon" />
+                    </div>
+                    <div class="question">
+                        <p><%= questionRead.title %></p>
+                    </div>
+                  </div>
+    
+                  <div class="actions">
+                    <a href="#" class="delete" data-id="<%= questionRead.id %>">
+                        <img src="/images/trash.svg" alt="delete">
+                        Delete
+                    </a>
+                  </div>
+                </div>
+              <% }); %>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-wrapper">
+        <div class="modal">
+            <h2>Delete question</h2>
+            <p>Are you sure that you wish to delete this question?</p>
+            <form action="#" method="POST">
+                <label class="sr-only" for="password">Enter your admin pass</label>
+                <input type="password" placeholder="Enter your password" name="password" id="password">
+
+                <div class="buttons">
+                    <div class="button grey cancel">Cancel</div>
+                    <button class="red" type="submit">Yes, delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+  </body>
+</html>
